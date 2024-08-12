@@ -1,0 +1,45 @@
+name: "Run Tests"
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - laravel: 11.*
+            php: 8.3
+            testbench: ^9.0
+            pest: ^2.0
+            monolog: ^4.0
+            stability: prefer-stable
+          - laravel: 10.*
+            php: 8.2
+            testbench: ^8.0
+            pest: ^1.0
+            monolog: ^3.0
+            stability: prefer-stable
+    name: Laravel ${{ matrix.laravel }} with PHP ${{ matrix.php }} - ${{ matrix.stability }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: zip, pdo, sqlite, pdo_sqlite
+          coverage: none
+      - name: Install dependencies
+        run: |
+          composer require \
+              "laravel/framework:${{ matrix.laravel }}" \
+              "orchestra/testbench:${{ matrix.testbench }}" \
+              "monolog/monolog:${{ matrix.monolog }}" \
+              "pestphp/pest:${{ matrix.pest }}" \
+              "pestphp/pest-plugin-laravel:${{ matrix.pest }}" \
+            --no-interaction --no-update
+          composer update --${{ matrix.stability }} --prefer-dist --no-interaction
+      - name: Execute tests
+        run: composer pest

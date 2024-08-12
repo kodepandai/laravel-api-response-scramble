@@ -1,0 +1,7 @@
+vendor/
+.php-cs-fixer.cache
+.phpunit.cache
+.phpunit.result.cache
+composer.lock
+testing.sh
+.DS_Store

@@ -1,0 +1,9 @@
+parameters:
+  paths:
+    - config
+    - src
+    - tests
+  level: 7 # https://phpstan.org/user-guide/rule-levels
+  ignoreErrors:
+    - '#Call to an undefined method (.*)additionalProperties\(\)#'
+    - '#Parameter (.*) static method (.*)TypeHelper::getArgType\(\) expects (.*) given.#'
